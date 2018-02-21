@@ -1,0 +1,97 @@
+{
+  "transactions": [
+    {
+      "input": {
+        "key2": {
+          "name": "key2",
+          "version": 3
+        }
+      },
+      "output": {
+        "key2": {
+          "name": "key2",
+          "version": 4
+        },
+        "key8": {
+          "name": "key8",
+          "version": 1
+        }
+      },
+      "pulseNumber": 1,
+      "digest": "T0"
+    },
+    {
+      "input": {
+        "key3": {
+          "name": "key3",
+          "version": 1
+        },
+        "key1": {
+          "name": "key1",
+          "version": 2
+        }
+      },
+      "output": {
+        "key3": {
+          "name": "key3",
+          "version": 2
+        },
+        "key1": {
+          "name": "key1",
+          "version": 3
+        },
+        "key2": {
+          "name": "key2",
+          "version": 3
+        }
+      },
+      "pulseNumber": 1,
+      "digest": "T1"
+    },
+    {
+      "input": {
+        "key5": {
+          "name": "key5",
+          "version": 1
+        },
+        "key7": {
+          "name": "key7",
+          "version": 0
+        }
+      },
+      "output": {
+        "key5": {
+          "name": "key5",
+          "version": 2
+        }
+      },
+      "pulseNumber": 1,
+      "digest": "T2"
+    },
+    {
+      "input": {
+        "key4": {
+          "name": "key4",
+          "version": 2
+        },
+        "key1": {
+          "name": "key1",
+          "version": 3
+        }
+      },
+      "output": {
+        "key1": {
+          "name": "key1",
+          "version": 4
+        },
+        "key3": {
+          "name": "key3",
+          "version": 2
+        }
+      },
+      "pulseNumber": 1,
+      "digest": "T3"
+    }
+  ],
+  "expected": ["T1","T0","T2","T3"]
+}

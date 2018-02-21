@@ -9,7 +9,6 @@ var ssutil = require("./ssutil");
 
 
 function orderTransactions(unorderedTransactions){
-
     return unorderedTransactions;
 }
 
