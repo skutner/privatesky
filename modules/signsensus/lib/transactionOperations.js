@@ -5,7 +5,6 @@ function compareTransactions(transaction1, transaction2) {
     if (transaction1.pulseNumber > transaction2.pulseNumber) {
         return 1;
     }
-    //var minLen=Math.min(transaction1.output.length,transaction2.input.length);
     for (var i in transaction1.output) {
         for (var j in transaction2.input) {
             if ( i === j && transaction1.output[i].version <= transaction2.input[j].version)

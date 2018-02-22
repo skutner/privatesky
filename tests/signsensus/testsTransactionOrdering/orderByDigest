@@ -2,13 +2,19 @@
     "transactions": [
         {
             "input": {
-                "key6": {
-                    "version":
+                "key8": {
+                    "version": 1
+                },
+                "key2": {
+                    "version": 1
                 }
             },
             "output": {
-                "key7": {
-                    "version": 14
+                "key8": {
+                    "version": 2
+                },
+                "key2": {
+                    "version": 2
                 }
             },
             "pulseNumber": 0,
@@ -16,20 +22,105 @@
         },
         {
             "input": {
-                "key4": {
-                    "version": 9
+                "key3": {
+                    "version": 1
                 },
-                "key2": {
-                    "version": 16
+                "key0": {
+                    "version": 1
                 }
             },
             "output": {
                 "key3": {
-                    "version": 11
+                    "version": 2
+                },
+                "key0": {
+                    "version": 2
                 }
             },
             "pulseNumber": 0,
             "digest": "T1"
+        },
+        {
+            "input": {
+                "key6": {
+                    "version": 1
+                }
+            },
+            "output": {
+                "key6": {
+                    "version": 2
+                }
+            },
+            "pulseNumber": 0,
+            "digest": "T2"
+        },
+        {
+            "input": {
+                "key8": {
+                    "version": 3
+                }
+            },
+            "output": {
+                "key8": {
+                    "version": 4
+                }
+            },
+            "pulseNumber": 0,
+            "digest": "T3"
+        },
+        {
+            "input": {
+                "key0": {
+                    "version": 3
+                }
+            },
+            "output": {
+                "key0": {
+                    "version": 4
+                }
+            },
+            "pulseNumber": 0,
+            "digest": "T4"
+        },
+        {
+            "input": {
+                "key5": {
+                    "version": 1
+                },
+                "key0": {
+                    "version": 5
+                }
+            },
+            "output": {
+                "key5": {
+                    "version": 2
+                },
+                "key0": {
+                    "version": 6
+                }
+            },
+            "pulseNumber": 0,
+            "digest": "T5"
+        },
+        {
+            "input": {
+                "key5": {
+                    "version": 3
+                },
+                "key9": {
+                    "version": 1
+                }
+            },
+            "output": {
+                "key5": {
+                    "version": 4
+                },
+                "key9": {
+                    "version": 2
+                }
+            },
+            "pulseNumber": 0,
+            "digest": "T6"
         }
     ],
     "expected": []

@@ -20,6 +20,7 @@ function Transaction(input, output){
 function fakePDSVerificationSpace(){
 
     var keys = {};
+    var latestKeyAlteringTransaction={};
     function readKey(name){
         var k = keys[name];
         if(!k){
@@ -40,7 +41,7 @@ function fakePDSVerificationSpace(){
     }
 
 
-    this.generateInputOut = function(){
+    function generateInputOut(){
         var result = {
             input:{},
             output:{}
@@ -49,22 +50,29 @@ function fakePDSVerificationSpace(){
         var howMany = getRandomInt(MAX_KEYS_COUNT/4) + 1;
         for(var i = 0; i< howMany; i++ ){
             var keyName = "key" + getRandomInt(MAX_KEYS_COUNT);
-            var key = {};
-            key.version = modifyKey(keyName);
-            result.input[keyName] = key;
+            var keyIn = {};
+            var keyOut = {};
+            keyIn.version = modifyKey(keyName);
+            result.input[keyName] = keyIn;
+
+            keyOut.version=modifyKey(keyName);
+            result.output[keyName]=keyOut;
         }
-
-        var howMany = getRandomInt(MAX_KEYS_COUNT/8) + 1 ;
-        for(var i = 0; i< howMany; i++ ){
-            var keyName = "key" + getRandomInt(MAX_KEYS_COUNT);
-
-            var key = {};
-            key.version = modifyKey(keyName);
-            result.output[keyName] = key;
-        }
-
         return result;
     };
+     this.generateTransactions=function(noTransactions){
+        var transactions=[];
+        while(noTransactions>0){
+            var result=generateInputOut();
+            var transaction=new Transaction(result.input,result.output);
+            for(var key in transaction.output){
+                latestKeyAlteringTransaction[key]=transaction;
+            }
+            transactions.push(transaction);
+            noTransactions--;
+        }
+        return transactions;
+    }
     this.latestVersion=function(name){
         return readKey(name);
     }
@@ -74,91 +82,100 @@ function fakePDSVerificationSpace(){
     this.getKeys=function () {
         return keys;
     }
+    this.latestTransaction=function(key){
+        return latestKeyAlteringTransaction[key];
+    }
+    this.latestTransactions=function () {
+        return latestKeyAlteringTransaction;
+    }
 
 }
 
-function generateTransactions(noTransactions){
-    var transactions=[];
-    while(noTransactions>0){
-        var result=fakePDS.generateInputOut();
-        transactions.push(new Transaction(result.input,result.output));
-        noTransactions--;
+function TransactionsFilesManager(testDirectory,auxDirectory){
+    var fakePDS=new fakePDSVerificationSpace();
+
+    function getFiles(testDirectory){
+        var memberFiles=fs.readdirSync(testDirectory);
+        for(var i=0; i<memberFiles.length; i++){
+            memberFiles[i]=path.resolve(testDirectory+'\\'+memberFiles[i]);
+        }
+        return memberFiles;
     }
-    return transactions;
-}
-function getFiles(testDirectory){
-    var memberFiles=fs.readdirSync(testDirectory);
-    for(var i=0; i<memberFiles.length; i++){
-        memberFiles[i]=path.resolve(testDirectory+'\\'+memberFiles[i]);
+    function writeTestFiles(files){
+        transactionCounter=0;
+        if(files.length){
+            var file=files.shift();
+            var howMany = getRandomInt(MAX_TRANS_COUNT/2)+1;
+            var transactions=fakePDS.generateTransactions(howMany);
+            var test={};
+            test.transactions=transactions;
+            test.expected=[];
+            fs.writeFile(file,JSON.stringify(test,null,4),function(err){
+                if(err){
+                    console.error(err);
+                    return;
+                }
+                console.log('Done with '+file);
+                writeTestFiles(files);
+            });
+
+        }
     }
-    return memberFiles;
-}
-function createFiles(files){
-    transactionCounter=0;
-    if(files.length){
-        var file=files.shift();
-        var howMany = getRandomInt(MAX_TRANS_COUNT/2)+1;
-        var transactions=generateTransactions(howMany);
-        var test={};
-        test.transactions=transactions;
-        test.expected=[];
-        fs.writeFile(file,JSON.stringify(test,null,4),function(err){
+    function testTransactionSort(files){
+        if(files.length){
+            var file=files.shift();
+            fs.readFile(file,function(err,data){
+                if(err){
+                    console.error(err);
+                    return;
+                }
+                var test=JSON.parse(data);
+                var result=[];
+                var transactions=test.transactions;
+                operations.sortTransactions(transactions,fakePDS);
+                for(var i=0; i<transactions.length; i++){
+                    result.push(transactions[i].digest);
+                }
+                /* if(assert.deepEqual(result,test.expected) == undefined){
+                     console.log('Test passed');
+                 }*/
+                console.log(result);
+                testTransactionSort(files);
+            });
+
+        }
+    }
+    this.generateTestFiles=function (testDirectory) {
+        var files=getFiles(testDirectory);
+        writeTestFiles(files);
+        fs.readdir(auxDirectory,function (err,files) {
             if(err){
                 console.error(err);
                 return;
             }
-            console.log('Done with '+file);
-            createFiles(files);
-        });
-
+            files.forEach(function(file){
+                fs.writeFile(file,JSON.stringify(fakePDS.latestTransactions()),function (err) {
+                    if(err){
+                        console.error(err);
+                        return;
+                    }
+                    console.log("Done with verification space");
+                });
+            })
+        })
     }
-}
-function readFromFiles(files){
-    if(files.length){
-        var file=files.shift();
-        fs.readFile(file,function(err,data){
-            if(err){
-                console.error(err);
-                return;
-            }
-            var test=JSON.parse(data);
-            var result=[];
-            var transactions=test.transactions;
-            operations.sortTransactions(transactions,fakePDS);
-            for(var i=0; i<transactions.length; i++){
-                result.push(transactions[i].digest);
-            }
-           /* if(assert.deepEqual(result,test.expected) == undefined){
-                console.log('Test passed');
-            }*/
-            console.log(result);
-            readFromFiles(files);
-        });
-
+    this.testSort=function (testDirectory) {
+        var files=getFiles(testDirectory);
+        testTransactionSort(files);
     }
 }
 
-var fakePDS=new fakePDSVerificationSpace();
+
+
 var testDirectory='./testsTransactionOrdering';
-var files=getFiles(testDirectory);
-var filesClone=getFiles(testDirectory);
-var transactions=generateTransactions(50);
-fs.writeFile(path.resolve(testDirectory+'\\'+'verificationSpace'),JSON.stringify(fakePDS.getKeys(),null,4),function (err) {
-    if(err){
-        console.error(err);
-        return;
-    }
-    console.log("Done - Verification space");
-   // createFiles(files);
-});
-fs.readFile(path.resolve(testDirectory+'\\'+'verificationSpace'),function(err,data){
-   if(err){
-       console.error(err);
-       return;
-   }
-   keys=JSON.parse(data);
-   console.log(keys);
-});
-//readFromFiles(files);
+var auxDirectory='./auxDirectory';
+var tops=new TransactionsFilesManager(testDirectory,auxDirectory);
+tops.generateTestFiles(testDirectory);
+
 
 
