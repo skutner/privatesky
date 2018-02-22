@@ -2,67 +2,44 @@
     "transactions": [
         {
             "input": {
-                "key2": {
-                    "name": "key2",
-                    "version": 2
+                "key6": {
+                    "version": 17
                 }
             },
             "output": {
-                "key2": {
-                    "name": "key2",
-                    "version": 3
-                },
-                "key8": {
-                    "name": "key8",
-                    "version": 1
+                "key3": {
+                    "version": 12
                 }
             },
-            "pulseNumber": 3,
+            "pulseNumber": 0,
             "digest": "T0"
         },
         {
             "input": {
-                "key3": {
-                    "name": "key3",
-                    "version": 1
-                },
-                "key1": {
-                    "name": "key1",
-                    "version": 2
+                "key7": {
+                    "version": 15
                 }
             },
             "output": {
-                "key3": {
-                    "name": "key3",
-                    "version": 2
-                },
-                "key1": {
-                    "name": "key1",
-                    "version": 3
-                },
-                "key2": {
-                    "name": "key2",
-                    "version": 3
+                "key0": {
+                    "version": 14
                 }
             },
-            "pulseNumber": 2,
+            "pulseNumber": 0,
             "digest": "T1"
         },
         {
             "input": {
-                "key5": {
-                    "name": "key5",
-                    "version": 1
+                "key6": {
+                    "version": 18
                 },
-                "key7": {
-                    "name": "key7",
-                    "version": 0
+                "key4": {
+                    "version": 10
                 }
             },
             "output": {
-                "key5": {
-                    "name": "key5",
-                    "version": 2
+                "key9": {
+                    "version": 15
                 }
             },
             "pulseNumber": 0,
@@ -70,28 +47,38 @@
         },
         {
             "input": {
-                "key4": {
-                    "name": "key4",
-                    "version": 2
+                "key2": {
+                    "version": 17
                 },
-                "key1": {
-                    "name": "key1",
-                    "version": 3
+                "key8": {
+                    "version": 14
                 }
             },
             "output": {
-                "key1": {
-                    "name": "key1",
-                    "version": 4
-                },
-                "key3": {
-                    "name": "key3",
-                    "version": 2
+                "key7": {
+                    "version": 16
                 }
             },
-            "pulseNumber": 1,
+            "pulseNumber": 0,
             "digest": "T3"
+        },
+        {
+            "input": {
+                "key8": {
+                    "version": 15
+                },
+                "key5": {
+                    "version": 11
+                }
+            },
+            "output": {
+                "key5": {
+                    "version": 12
+                }
+            },
+            "pulseNumber": 0,
+            "digest": "T4"
         }
     ],
-    "expected": ["T2","T3","T1","T0"]
+    "expected": []
 }

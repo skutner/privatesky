@@ -3,7 +3,7 @@ const fs=require('fs');
 const path=require('path');
 const assert=require('assert');
 var MAX_KEYS_COUNT      = 10;
-var MAX_TRANS_COUNT = 15;
+var MAX_TRANS_COUNT = 16;
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
@@ -20,7 +20,6 @@ function Transaction(input, output){
 function fakePDSVerificationSpace(){
 
     var keys = {};
-
     function readKey(name){
         var k = keys[name];
         if(!k){
@@ -50,19 +49,8 @@ function fakePDSVerificationSpace(){
         var howMany = getRandomInt(MAX_KEYS_COUNT/4) + 1;
         for(var i = 0; i< howMany; i++ ){
             var keyName = "key" + getRandomInt(MAX_KEYS_COUNT);
-
             var key = {};
-            key.name    = keyName;
-            var problemsDice =  getRandomInt(3); // one in 3 keys will create concurrency issues
-            if(problemsDice){
-                key.version = readKey(keyName);
-            } else {
-
-                var key = {};
-                key.name    = keyName;
-                key.version = modifyKey(keyName);
-                result.output[keyName] = key;
-            }
+            key.version = modifyKey(keyName);
             result.input[keyName] = key;
         }
 
@@ -71,15 +59,24 @@ function fakePDSVerificationSpace(){
             var keyName = "key" + getRandomInt(MAX_KEYS_COUNT);
 
             var key = {};
-            key.name    = keyName;
             key.version = modifyKey(keyName);
             result.output[keyName] = key;
         }
 
         return result;
+    };
+    this.latestVersion=function(name){
+        return readKey(name);
+    }
+    this.recordsLength=function () {
+        return keys.length;
+    }
+    this.getKeys=function () {
+        return keys;
     }
 
 }
+
 function generateTransactions(noTransactions){
     var transactions=[];
     while(noTransactions>0){
@@ -96,22 +93,21 @@ function getFiles(testDirectory){
     }
     return memberFiles;
 }
-
-
 function createFiles(files){
     transactionCounter=0;
     if(files.length){
         var file=files.shift();
-        var howMany = getRandomInt(MAX_TRANS_COUNT/3)+1;
+        var howMany = getRandomInt(MAX_TRANS_COUNT/2)+1;
         var transactions=generateTransactions(howMany);
         var test={};
         test.transactions=transactions;
         test.expected=[];
         fs.writeFile(file,JSON.stringify(test,null,4),function(err){
-           if(err){
-               console.error(err);
-               return;
-           }
+            if(err){
+                console.error(err);
+                return;
+            }
+            console.log('Done with '+file);
             createFiles(files);
         });
 
@@ -128,26 +124,41 @@ function readFromFiles(files){
             var test=JSON.parse(data);
             var result=[];
             var transactions=test.transactions;
-            operations.sortTransactions(transactions);
+            operations.sortTransactions(transactions,fakePDS);
             for(var i=0; i<transactions.length; i++){
                 result.push(transactions[i].digest);
             }
-            if(assert.deepEqual(result,test.expected) == undefined){
+           /* if(assert.deepEqual(result,test.expected) == undefined){
                 console.log('Test passed');
-            }
+            }*/
+            console.log(result);
             readFromFiles(files);
         });
 
     }
 }
 
-
 var fakePDS=new fakePDSVerificationSpace();
 var testDirectory='./testsTransactionOrdering';
 var files=getFiles(testDirectory);
 var filesClone=getFiles(testDirectory);
-readFromFiles(files);
-
-//createFiles(files);
+var transactions=generateTransactions(50);
+fs.writeFile(path.resolve(testDirectory+'\\'+'verificationSpace'),JSON.stringify(fakePDS.getKeys(),null,4),function (err) {
+    if(err){
+        console.error(err);
+        return;
+    }
+    console.log("Done - Verification space");
+   // createFiles(files);
+});
+fs.readFile(path.resolve(testDirectory+'\\'+'verificationSpace'),function(err,data){
+   if(err){
+       console.error(err);
+       return;
+   }
+   keys=JSON.parse(data);
+   console.log(keys);
+});
+//readFromFiles(files);
 
 
