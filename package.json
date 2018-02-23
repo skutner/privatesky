@@ -33,6 +33,9 @@
     }
   ],
   "dependencies": {
-    "secp256k1": "^3.5.0"
+    "double-check": "^0.2.1",
+    "safebox": "^0.2.1",
+    "secp256k1": "^3.5.0",
+    "whys": "^0.2.2"
   }
 }

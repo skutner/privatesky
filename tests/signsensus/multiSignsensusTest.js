@@ -5,12 +5,16 @@ require("../../engine/core").enableTesting();
 
 var safeBox = ss.getAgentSafeBox("testAgent", 63);
 
-
+var assert = require("double-check").assert;
 
 
 var test = $$.flow.describe("signatureTest",{
-
+    public:{
+        counter: "int"
+    },
     start:function(){
+        this.counter=0;
+
         this.obj = {
             name:"Hello World"
         }
@@ -23,24 +27,23 @@ var test = $$.flow.describe("signatureTest",{
             safeBox.sign(this.digest, this.getSignature);
 
             t = process.hrtime(t);
-            console.log('Signing + generating a new public key took %d seconds (or %d milliseconds)', t[0] + t[1]/1000000000, t[1]/ 1000000);
+            var time_in_sec = t[0] + t[1]/1000000000;
+            assert.true(time_in_sec<1, "generating new public key toked to long");
+            //console.log('Signing + generating a new public key took %d seconds (or %d milliseconds)', t[0] + t[1]/1000000000, t[1]/ 1000000);
         }
     },
     getSignature:function(err,signature){
+        this.counter +=1;
         this.signature = signature;
-        console.log("Signature:", this.signature);
-       safeBox.verify(this.digest, signature, this.printResults);
+        assert.notEqual(this.signature, null, "Signature is null!");
+        safeBox.verify(this.digest, signature, this.printResults);
     },
 
     printResults:function(err,isGood){
-        //console.log(this.signature, isGood);
-        if(isGood){
-            console.log("Success");
-        } else {
-            console.log("Fail to verify");
-        }
+        this.counter -=1;
+        assert.equal(this.counter, 0, "Failed");
+        assert.equal(isGood, true, "Fail to verify signature");
     }
 })
-
 
 test().start();
