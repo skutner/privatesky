@@ -2,19 +2,13 @@
     "transactions": [
         {
             "input": {
-                "key8": {
-                    "version": 7
-                },
-                "key3": {
-                    "version": 3
+                "key4": {
+                    "version": 5
                 }
             },
             "output": {
-                "key8": {
-                    "version": 8
-                },
-                "key3": {
-                    "version": 4
+                "key4": {
+                    "version": 6
                 }
             },
             "pulseNumber": 0,
@@ -22,13 +16,19 @@
         },
         {
             "input": {
-                "key2": {
-                    "version": 3
+                "key8": {
+                    "version": 9
+                },
+                "key4": {
+                    "version": 7
                 }
             },
             "output": {
-                "key2": {
-                    "version": 4
+                "key8": {
+                    "version": 10
+                },
+                "key4": {
+                    "version": 8
                 }
             },
             "pulseNumber": 0,
@@ -36,13 +36,13 @@
         },
         {
             "input": {
-                "key2": {
-                    "version": 5
+                "key4": {
+                    "version": 9
                 }
             },
             "output": {
-                "key2": {
-                    "version": 6
+                "key4": {
+                    "version": 10
                 }
             },
             "pulseNumber": 0,
@@ -50,13 +50,19 @@
         },
         {
             "input": {
-                "key8": {
+                "key6": {
                     "version": 9
+                },
+                "key0": {
+                    "version": 7
                 }
             },
             "output": {
-                "key8": {
+                "key6": {
                     "version": 10
+                },
+                "key0": {
+                    "version": 8
                 }
             },
             "pulseNumber": 0,
@@ -64,19 +70,13 @@
         },
         {
             "input": {
-                "key9": {
-                    "version": 3
-                },
-                "key0": {
-                    "version": 9
+                "key8": {
+                    "version": 11
                 }
             },
             "output": {
-                "key9": {
-                    "version": 4
-                },
-                "key0": {
-                    "version": 10
+                "key8": {
+                    "version": 12
                 }
             },
             "pulseNumber": 0,
@@ -84,23 +84,37 @@
         },
         {
             "input": {
-                "key0": {
-                    "version": 11
+                "key5": {
+                    "version": 3
                 },
-                "key6": {
-                    "version": 7
+                "key4": {
+                    "version": 11
                 }
             },
             "output": {
-                "key0": {
-                    "version": 12
+                "key5": {
+                    "version": 4
                 },
-                "key6": {
-                    "version": 8
+                "key4": {
+                    "version": 12
                 }
             },
             "pulseNumber": 0,
             "digest": "T5"
+        },
+        {
+            "input": {
+                "key8": {
+                    "version": 13
+                }
+            },
+            "output": {
+                "key8": {
+                    "version": 14
+                }
+            },
+            "pulseNumber": 0,
+            "digest": "T6"
         }
     ],
     "expected": []

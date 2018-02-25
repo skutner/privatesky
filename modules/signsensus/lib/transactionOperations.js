@@ -32,6 +32,7 @@ exports.sortTransactions = function (transactions,localStorage) {
     var toBeRemovedIndexes=[];
     for( var i=0; i<transactions.length; i++){
         for(var key in transactions[i].input) {
+            var latestVersion=localStorage.latestVersion(key);
             if (transactions[i].input[key].version < localStorage.latestVersion(key)){
                 toBeRemovedIndexes.push(i);
                 break;
@@ -40,14 +41,17 @@ exports.sortTransactions = function (transactions,localStorage) {
                 toBeRemovedIndexes.push(i);
                 break;
             }
-            if(transactions[i].output[key].version > localStorage.latestVersion(key)){
-                if(transactions[i].timestamp < localStorage)
+           /* if(transactions[i].output[key].version > localStorage.latestVersion(key)){
+                if(transactions[i].timestamp < localStorage.lates)
                 break;
-            }
+            }*/
         }
     }
     for(var i=0; i<toBeRemovedIndexes.length; i++){
         transactions.splice(toBeRemovedIndexes[i],1);
+        for(var j=i+1; j<toBeRemovedIndexes.length; j++){
+            toBeRemovedIndexes[j]-=1;
+        }
     }
     transactions.sort(compareTransactions);
 }
