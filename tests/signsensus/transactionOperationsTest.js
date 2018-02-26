@@ -18,7 +18,6 @@ function Transaction(input, output){
     transactionCounter++;
 }
 function fakePDSVerificationSpace(){
-
     var keys = {};
     var latestKeyAlteringTransaction={};
     function readKey(name){
@@ -74,7 +73,7 @@ function fakePDSVerificationSpace(){
         return transactions;
     }
     this.latestVersion=function(name){
-        return readKey(name);
+        return keys[name];
     }
     this.recordsLength=function () {
         return keys.length;
@@ -87,6 +86,16 @@ function fakePDSVerificationSpace(){
     }
     this.latestTransactions=function () {
         return latestKeyAlteringTransaction;
+    }
+    this.setLatestTransactions=function(latestTransactions){
+         latestKeyAlteringTransaction=latestTransactions;
+         for(var key in latestKeyAlteringTransaction){
+             setKeys(key);
+         }
+    }
+    function setKeys(name){
+         var transaction=latestKeyAlteringTransaction[name];
+         keys[name]=transaction.output[name].version;
     }
 
 }
@@ -120,6 +129,24 @@ function TransactionsFilesManager(testDirectory,auxDirectory){
             });
 
         }
+        else{
+            fs.readdir(auxDirectory,function (err,auxFiles) {
+                if(err){
+                    console.error(err);
+                    return;
+                }
+                auxFiles.forEach(function(auxFile){
+                    var latest=fakePDS.latestTransactions();
+                    fs.writeFile(auxDirectory+'\\'+auxFile,JSON.stringify(latest,null,4),function (err) {
+                        if(err){
+                            console.error(err);
+                            return;
+                        }
+                        console.log("Done with verification space");
+                    });
+                })
+            })
+        }
     }
     function testTransactionSort(files){
         if(files.length){
@@ -136,10 +163,10 @@ function TransactionsFilesManager(testDirectory,auxDirectory){
                 for(var i=0; i<transactions.length; i++){
                     result.push(transactions[i].digest);
                 }
-                /* if(assert.deepEqual(result,test.expected) == undefined){
-                     console.log('Test passed');
-                 }*/
                 console.log(result);
+                 if(assert.deepEqual(result,test.expected) == undefined){
+                     console.log('Test passed');
+                 }
                 testTransactionSort(files);
             });
 
@@ -148,25 +175,19 @@ function TransactionsFilesManager(testDirectory,auxDirectory){
     this.generateTestFiles=function (testDirectory) {
         var files=getFiles(testDirectory);
         writeTestFiles(files);
-        fs.readdir(auxDirectory,function (err,files) {
+
+    }
+    this.testSort=function (testDirectory,auxFile) {
+        var files=getFiles(testDirectory);
+        fs.readFile(auxFile,function (err,data) {
             if(err){
                 console.error(err);
                 return;
             }
-            files.forEach(function(file){
-                fs.writeFile(file,JSON.stringify(fakePDS.latestTransactions()),function (err) {
-                    if(err){
-                        console.error(err);
-                        return;
-                    }
-                    console.log("Done with verification space");
-                });
-            })
+            fakePDS.setLatestTransactions(JSON.parse(data));
+            testTransactionSort(files);
         })
-    }
-    this.testSort=function (testDirectory) {
-        var files=getFiles(testDirectory);
-        testTransactionSort(files);
+
     }
 }
 
@@ -174,8 +195,10 @@ function TransactionsFilesManager(testDirectory,auxDirectory){
 
 var testDirectory='./testsTransactionOrdering';
 var auxDirectory='./auxDirectory';
+var auxFile='verificationSpace';
 var tops=new TransactionsFilesManager(testDirectory,auxDirectory);
-tops.generateTestFiles(testDirectory);
+//tops.generateTestFiles(testDirectory);
+tops.testSort(testDirectory,auxDirectory+'\\'+auxFile);
 
 
 
