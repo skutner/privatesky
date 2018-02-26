@@ -1,11 +1,13 @@
 require("../../engine/core").enableTesting();
+var assert=require("double-check").assert;
 var f = $$.callflow.create("serialExample", {
     public:{
         result:"int"
     },
-    start:function(){
+    start:function(callback){
         this.result = 0;
-        var serial = this.serial(this.onResults, "Hello serial execution!")
+        this.callback=callback;
+        var serial = this.serial(this.onResults);
 
         serial.doStep1(1000);
         serial.doAsync(serial.asyncStep);
@@ -14,28 +16,26 @@ var f = $$.callflow.create("serialExample", {
         //echivalent: this.serial(this.onResults, "Hello serial execution!").doAsync(serial.asyncStep).doStep1(1).doStep2(2)
     },
     doStep1:function(value){
-        console.log("Executing step 1!", value);
+
         this.result += value;
     },
     doStep2:function(value){
-        console.log("Executing step 2!", value);
         this.result += value;
     },
     asyncStep:function(value){
-        console.log("Executing async step!", value);
         this.result += value;
     },
     doAsync:function(callback){
-        console.log("Executing async!");
         setTimeout(function(){
             callback(100);
         }, 100);
     },
-    onResults:function(err, res){
-        //err should be null
-        console.log("Serial execution result (should be 1103):", this.result, res);
+    onResults:function(err){
+        assert.equal(err,null,"Error");
+        assert.equal(this.result,1103,"Results don't match");
+        this.callback();
     }
 });
-
-f.start();
-//console.log(f.result); //should be 0... nothing got executed
+assert.callback("Serial Test",function(callback){
+    f.start(callback);
+})

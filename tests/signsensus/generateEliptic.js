@@ -4,7 +4,7 @@ const assert = require('assert');
 
 
 
-const sign = crypto.createSign('RSA-SHA256');
+var sign = crypto.createSign('RSA-SHA256');
 
 sign.update('some data to sign');
 
@@ -14,10 +14,6 @@ const privateKey = alice.getPrivateKey();
 
 console.log(sign.sign(privateKey, 'hex'));
 
-
-
-
-return ;
 
 for(var i=0; i<2; i++){
     var t = process.hrtime();

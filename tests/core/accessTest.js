@@ -1,6 +1,7 @@
-var flow = require("../../engine/index.js");
+var assert=require("double-check").assert;
+require("../../engine/core").enableTesting();
 
-var f = flow.createSwarm("simpleSwarm", {
+var f = $$.flow.create("simpleSwarm", {
     protected:{
         prot_count:"int"
     },
@@ -16,4 +17,5 @@ f.begin();
 f.pub_count = 1;
 f.prot_count = 2;
 f.priv_count = 3; //not declared
-console.log(f);
+assert.equal(f.count,3,"Results don't match");
+

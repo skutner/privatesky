@@ -1,11 +1,13 @@
 
 require("../../engine/core").enableTesting();
+var assert=require('double-check').assert;
 var f = $$.callflow.create("joinsExample", {
     public:{
         result:"int"
     },
-    start:function(){
+    start:function(callback){
         this.result = 0;
+        this.callback=callback;
         var join = this.join(this.doJoin);
 
         join.doStep1(1, join.asyncCode);
@@ -20,14 +22,13 @@ var f = $$.callflow.create("joinsExample", {
         this.result += value;
     },
     doJoin:function(){
-        console.log("Joins result:", this.result); //should print 111 because the callback from the second doStep1 is not from the join...
-    },
+        assert.equal(this.result,111,"Results don't match");
+        this.callback();
+        },
     asyncCode: function(){
         this.result += 100;
     }
 });
-
-f.start();
-
-setTimeout(f.doJoin, 2); //should print 211
-
+assert.callback("Joins async test",function(callback){
+    f.start(callback);
+})

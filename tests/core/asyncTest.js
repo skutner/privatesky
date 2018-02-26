@@ -1,5 +1,6 @@
 
 require("../../engine/core").enableTesting();
+var assert=require("double-check").assert;
 var f = $$.flow.create("asyncExample", {
     private:{
         a1:"int",
@@ -21,6 +22,6 @@ var f = $$.flow.create("asyncExample", {
 
 f.begin(1, 2);
 setTimeout(function(){
-    console.log("Result should be 3 and is: ", f.result);
+    assert.equal(f.result,3,"Results don't match");
 }, 2);
 

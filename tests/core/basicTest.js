@@ -1,5 +1,6 @@
 
 require("../../engine/core").enableTesting();
+var assert=require("double-check").assert;
 var f = $$.flow.describe("FlowExample", {
     private:{
         a1:"int",
@@ -14,4 +15,4 @@ var f = $$.flow.describe("FlowExample", {
 })();
 
 f.begin(1, 2);
-console.log("Result should be 3 and is: ", f.result);
+assert.equal(f.result,3,"Results don't match");

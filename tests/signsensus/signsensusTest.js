@@ -7,38 +7,39 @@ var safeBox = ss.getAgentSafeBox("testAgent");
 var assert=require('double-check').assert;
 
 
-assert.callback("Signature test",function(end) {
-    var expected = 'sign' + 'getSignature' + 'printResults';
-    var actual = "";
-
-    var test = $$.flow.describe("signatureTest", {
-
-        start: function () {
-            this.obj = {
-                name: "Hello World"
-            }
-
-            this.digest = safeBox.digest(this.obj);
-            actual += 'sign';
-            safeBox.sign(this.digest, this.getSignature);
-        },
-        getSignature: function (err, signature) {
-            this.signature = signature;
-            //console.log("Signature:", this.signature);
-            assert.notEqual(signature, null, "Signature is null");
-            actual += 'getSignature';
-            safeBox.verify(this.digest, signature, this.printResults);
-        },
-
-        printResults: function (err, isGood) {
-            //console.log(this.signature, isGood);
-            actual += 'printResults';
-            assert.equal(actual,expected,'Callback sequence does not match');
-            assert.equal(isGood, true, "Fail to verify signature");
-            end();
+var test = $$.flow.describe("signatureTest", {
+    public:{
+        result: "int"
+    },
+    start: function (callback) {
+        this.result=0;
+        this.callback=callback;
+        this.obj = {
+            name: "Hello World"
         }
-    })
-    test().start();
+        this.digest = safeBox.digest(this.obj);
+
+        safeBox.sign(this.digest, this.getSignature);
+    },
+    getSignature: function (err, signature) {
+        this.signature = signature;
+        //console.log("Signature:", this.signature);
+        this.result++;
+        assert.notEqual(signature, null, "Signature is null");
+
+        safeBox.verify(this.digest, signature, this.printResults);
+    },
+
+    printResults: function (err, isGood) {
+        this.result--;
+        assert.equal(err,null,"Error");
+        assert.equal(this.result,0,'Callback sequence does not match');
+        assert.equal(isGood, true, "Fail to verify signature");
+        this.callback();
+    }
+})
+assert.callback("Signsensus test",function(callback){
+    test().start(callback);
 });
 
 

@@ -1,7 +1,7 @@
 
 
 require("../../engine/core").enableTesting();
-
+var assert=require("double-check").assert;
 
 
 var worker = $$.flow.describe("worker", {
@@ -16,12 +16,10 @@ var worker = $$.flow.describe("worker", {
     },
     makeParallelTask: function(value, bag, callback){
         bag.result += value;
-        console.log("makeParallelTask: ", value)
         setTimeout(callback,2);
     },
     __mkOneStep:function(value, callback){
         this.bag.result += value;
-        console.log("__mkOneStep ", value)
         setTimeout(callback,3);
     }
 });
@@ -31,31 +29,34 @@ var f = $$.callflow.create("paralelSerialExample", {
     public:{
       result:"int"
     },
-    doSerial:function(){
+    doSerial:function(callback){
         this.result = 0;
-        var serial = this.serial(this.doParallel, "Hello serial execution!")
+        this.callback=callback;
+        var serial = this.serial(this.doParallel);
         worker().makeSerialTask(10, this, serial.progress);
         worker().makeSerialTask(20, this, serial.progress);
     },
     __dummy:function(number, callback){
-        console.log("__dummy paralel: ", number);
         this.result += number;
         //throw new Error("__dummy paralel");
         setTimeout(callback,5);
     },
     doParallel:function(err, res){
-        var parallel = this.parallel(this.printResults, "Hello parallel execution!");
+        var parallel = this.parallel(this.printResults);
         parallel.__dummy(1, parallel.progress);
         parallel.__dummy(2, parallel.progress);
         parallel.__dummy(3, parallel.progress);
         worker().makeParallelTask(1, this, parallel.progress);
         worker().makeParallelTask(2, this, parallel.progress);
     },
-    printResults:function(err, res){
-        //err should be null or not
-        console.log("Serial execution result (should be 105):", this.result, "Error:", err, res);
+    printResults:function(err){
+        assert.equal(err,null,"Error");
+        assert.equal(this.result,105,"Failed in callback sequence");
+        this.callback();
     }
 });
 
-f.doSerial(); //sorry for complexity, is a crush form an actual use cases from sandboxmanager...
+assert.callback("Serial Parallel Test",function(callback){
+    f.doSerial(callback);
+})
 
