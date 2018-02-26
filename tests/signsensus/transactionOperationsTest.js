@@ -162,13 +162,12 @@ function TransactionsFilesManager(testDirectory,auxDirectory){
                 operations.sortTransactions(transactions,fakePDS);
                 for(var i=0; i<transactions.length; i++){
                     result.push(transactions[i].digest);
-                }
-                 if(assert.deepEqual(result,test.expected) == undefined){
-                     console.log('Test passed');
-                 }
-                testTransactionSort(files);
-            });
+                };
+                    assert.deepEqual(result,test.expected,"Test failed");
+                    testTransactionSort(files);
 
+
+            });
         }
     }
     this.generateTestFiles=function (testDirectory) {

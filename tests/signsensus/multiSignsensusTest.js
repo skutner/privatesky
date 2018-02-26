@@ -28,7 +28,7 @@ var test = $$.flow.describe("signatureTest",{
 
             t = process.hrtime(t);
             var time_in_sec = t[0] + t[1]/1000000000;
-            assert.true(time_in_sec<1, "generating new public key toked to long");
+            assert.true(time_in_sec<1, "generating new public key took too long");
             //console.log('Signing + generating a new public key took %d seconds (or %d milliseconds)', t[0] + t[1]/1000000000, t[1]/ 1000000);
         }
     },
