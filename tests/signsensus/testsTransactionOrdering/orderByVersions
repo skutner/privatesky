@@ -3,32 +3,32 @@
         {
             "input": {
                 "key4": {
-                    "version": 5
+                    "version": 13
                 }
             },
             "output": {
                 "key4": {
-                    "version": 6
+                    "version": 14
                 }
             },
-            "pulseNumber": 0,
+            "pulseNumber": 1,
             "digest": "T0"
         },
         {
             "input": {
                 "key8": {
-                    "version": 9
+                    "version": 14
                 },
                 "key4": {
-                    "version": 7
+                    "version": 12
                 }
             },
             "output": {
                 "key8": {
-                    "version": 10
+                    "version": 15
                 },
                 "key4": {
-                    "version": 8
+                    "version": 13
                 }
             },
             "pulseNumber": 0,
@@ -37,12 +37,12 @@
         {
             "input": {
                 "key4": {
-                    "version": 9
+                    "version": 12
                 }
             },
             "output": {
                 "key4": {
-                    "version": 10
+                    "version": 13
                 }
             },
             "pulseNumber": 0,
@@ -51,21 +51,21 @@
         {
             "input": {
                 "key6": {
-                    "version": 9
-                },
-                "key0": {
-                    "version": 7
-                }
-            },
-            "output": {
-                "key6": {
                     "version": 10
                 },
                 "key0": {
                     "version": 8
                 }
             },
-            "pulseNumber": 0,
+            "output": {
+                "key6": {
+                    "version": 11
+                },
+                "key0": {
+                    "version": 9
+                }
+            },
+            "pulseNumber": 1,
             "digest": "T3"
         },
         {
@@ -88,7 +88,7 @@
                     "version": 3
                 },
                 "key4": {
-                    "version": 11
+                    "version": 14
                 }
             },
             "output": {
@@ -96,7 +96,7 @@
                     "version": 4
                 },
                 "key4": {
-                    "version": 12
+                    "version": 15
                 }
             },
             "pulseNumber": 0,
@@ -117,5 +117,5 @@
             "digest": "T6"
         }
     ],
-    "expected": []
+    "expected": ["T1", "T2", "T0", "T3"]
 }

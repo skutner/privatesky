@@ -163,7 +163,6 @@ function TransactionsFilesManager(testDirectory,auxDirectory){
                 for(var i=0; i<transactions.length; i++){
                     result.push(transactions[i].digest);
                 }
-                console.log(result);
                  if(assert.deepEqual(result,test.expected) == undefined){
                      console.log('Test passed');
                  }

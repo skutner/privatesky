@@ -41,10 +41,10 @@ exports.sortTransactions = function (transactions,localStorage) {
                 toBeRemovedIndexes.push(i);
                 break;
             }
-           /* if(transactions[i].output[key].version > localStorage.latestVersion(key)){
-                if(transactions[i].timestamp < localStorage.lates)
+            if(transactions[i].output[key].version > localStorage.latestVersion(key)){
+                if(transactions[i].timestamp < localStorage.latestTransaction(key).timestamp)
                 break;
-            }*/
+            }
         }
     }
     for(var i=0; i<toBeRemovedIndexes.length; i++){
