@@ -1,5 +1,6 @@
 
 require("../../engine/core").enableTesting();
+var assert=require("double-check").assert;
 var f = $$.swarm.create("stepExample", {
     private:{
         a1:"int",
@@ -22,4 +23,4 @@ var f = $$.swarm.create("stepExample", {
 });
 
 f.begin(1, 2);
-console.log(f.doResult()); //should be 6
+assert.equal(f.doResult(),6,"Results don't match");

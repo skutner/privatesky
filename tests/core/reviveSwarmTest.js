@@ -17,7 +17,7 @@ var f = $$.swarms.create("simpleSwarm", {
     }
 });
 
-eroare.. nu e terminat sau util...
+
 /*
 var storage = flow.createMemoryStorage();
 

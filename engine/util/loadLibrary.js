@@ -11,6 +11,7 @@ function wrapCall(original, prefixName){
     return function(){
         //console.log("prefixName", prefixName)
         var previousPrefix = $$.libraryPrefix;
+        console.log(previousPrefix);
         $$.libraryPrefix = prefixName;
         try{
             var ret = original.apply(this,arguments);
@@ -67,6 +68,8 @@ function SwarmLibrary(prefixName, folder){
 
 exports.loadLibrary = function(prefixName, folder){
     var existing = $$.libraries[prefixName];
+    console.log("In Load Library");
+    console.log(prefixName);
     if(existing ){
         if(folder) {
             $$.errorHandler.warning("Reusing already loaded library " + prefixName + "could be an error!");
