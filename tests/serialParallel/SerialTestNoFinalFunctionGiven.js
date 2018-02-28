@@ -9,10 +9,6 @@ var f = $$.callflow.create("serialExample", {
         this.callback=callback;
         var serial = this.serial(this.onResults);
 
-        serial.doStep1(1000);
-        serial.doAsync(serial.asyncStep);
-        serial.doStep1(1).doStep2(2);
-        serial.doAsync(this.asyncStep);//callback is executed outside serial context; result not expected to change
     },
     doStep1:function(value){
 

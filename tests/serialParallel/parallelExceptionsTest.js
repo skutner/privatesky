@@ -3,9 +3,7 @@ require("../../engine/core").enableTesting();
 var assert=require('double-check').assert;
 var f = $$.callflow.create("parallelExceptionCase", {
     public: {
-        result: "int",
-        resultCount: "int"
-
+        result: "int"
     },
     start: function (callback) {
         this.result = 0;
@@ -24,9 +22,7 @@ var f = $$.callflow.create("parallelExceptionCase", {
         throw new Error(value);
     },
     doJoin: function (err) {
-        this.resultCount++;
-        assert.equal(this.result, 3, "Problem with callback sequence");
-        assert.equal(this.resultCount,1,"Too many joins");
+        assert.equal(this.result, 3, "There is a problem with the callback sequence");
         assert.notEqual(err, null, "Error expected");
         this.callback();
     }

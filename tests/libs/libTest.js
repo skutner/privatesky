@@ -10,7 +10,7 @@ assert.notEqual(lib1,null,"lib1 is null");
 assert.notEqual(lib2,null,"lib2 is null");
 assert.equal(lib3,lib2,"Libraries are not the same");
 
-//$$.callflow.start("wrongName"); //should send errors
+
 var test1=$$.callflow.start("library1.f1");
 assert.notEqual(test1,null,"Test1 is null");
 
@@ -22,3 +22,5 @@ var test4=$$.callflow.start(lib3.f1);
 
 assert.notEqual(test3,null,"Test3 is null");
 assert.notEqual(test4,null,"Test4 is null");
+
+$$.callflow.start("wrongName"); //should send errors
